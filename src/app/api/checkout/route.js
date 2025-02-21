@@ -1,26 +1,33 @@
-import Stripe from "stripe";
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// // src/app/api/checkout/route.js
+// import Stripe from "stripe";
 
-export async function POST(req) {
-  try {
-    const { items } = await req.json();
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: items.map((item) => ({
-        price_data: {
-          currency: "usd",
-          product_data: { name: item.name },
-          unit_amount: item.price * 100,
-        },
-        quantity: item.quantity,
-      })),
-      mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
-    });
+// // Initialize Stripe with your secret key (use the key stored in your .env)
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-    return Response.json({ url: session.url });
-  } catch (error) {
-    return Response.json({ error: "Payment failed" }, { status: 500 });
-  }
-}
+// export async function POST(req) {
+//   try {
+//     const { items } = await req.json(); // Receive the cart items from the frontend
+    
+//     // Create a Checkout session with Stripe
+//     const session = await stripe.checkout.sessions.create({
+//       payment_method_types: ["card"], // Define payment methods you accept
+//       line_items: items.map((item) => ({
+//         price_data: {
+//           currency: "usd", // Currency you are using (you can change to another currency)
+//           product_data: { name: item.name }, // Set the product name
+//           unit_amount: item.price * 100, // Convert to cents (Stripe expects this in cents)
+//         },
+//         quantity: item.quantity, // How many of this product are in the cart
+//       })),
+//       mode: "payment", // Payment mode: payment (single payment), subscription, or setup
+//       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success`, // URL on success
+//       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`, // URL on cancel
+//     });
+
+//     // Return the URL for the client to redirect to Stripe Checkout
+//     return Response.json({ url: session.url });
+//   } catch (error) {
+//     // If any errors occur, send an error message
+//     return Response.json({ error: error.message }, { status: 500 });
+//   }
+// }
