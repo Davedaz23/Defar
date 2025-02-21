@@ -1,3 +1,4 @@
+'use client';
 import { useSession } from "next-auth/react";
 
 export default function AdminPanel() {
@@ -14,3 +15,4 @@ export default function AdminPanel() {
     </div>
   );
 }
+ 
